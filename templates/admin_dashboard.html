@@ -1,0 +1,204 @@
+{% extends 'layout.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Stats cards ko thoda behtar banane ke liye */
+    .stat-card {
+      border-left-width: 5px;
+      border-radius: 8px;
+    }
+    .stat-card .card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #6c757d; /* Muted text color */
+    }
+    .stat-card .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #333;
+    }
+    .stat-card .icon {
+      font-size: 2.5rem;
+      opacity: 0.3;
+    }
+    /* Alag alag stats ke liye border colors */
+    .border-left-primary { border-left-color: #0d6efd; }
+    .border-left-warning { border-left-color: #ffc107; }
+    .border-left-info    { border-left-color: #0dcaf0; }
+    .border-left-success { border-left-color: #198754; }
+    .border-left-dark    { border-left-color: #212529; }
+  </style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid p-4">
+
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Admin Dashboard</h1>
+  </div>
+  
+  <div class="row g-4">
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card shadow-sm h-100 py-2 stat-card border-left-primary">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col">
+              <div class="card-title">Total Complaints</div>
+              <div class="stat-number">{{ total }}</div>
+            </div>
+            <div class="col-auto icon">
+              <i class="bi bi-files text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card shadow-sm h-100 py-2 stat-card border-left-warning">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col">
+              <div class="card-title">Pending</div>
+              <div class="stat-number">{{ pending }}</div>
+            </div>
+            <div class="col-auto icon">
+              <i class="bi bi-clock-history text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card shadow-sm h-100 py-2 stat-card border-left-info">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col">
+              <div class="card-title">In Progress</div>
+              <div class="stat-number">{{ inprog }}</div>
+            </div>
+            <div class="col-auto icon">
+              <i class="bi bi-arrow-repeat text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card shadow-sm h-100 py-2 stat-card border-left-success">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col">
+              <div class="card-title">Resolved</div>
+              <div class="stat-number">{{ resolved }}</div>
+            </div>
+            <div class="col-auto icon">
+              <i class="bi bi-check2-circle text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    <div class="col-xl-7 col-lg-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Complaint Activity (Last 7 days)</h6>
+        </div>
+        <div class="card-body">
+          <div class="chart-area" style="height: 320px;">
+            <canvas id="adminChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-5 col-lg-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+          <h6 class="m-0 font-weight-bold text-primary">Recent Complaints</h6>
+          <a href="{{ url_for('admin_manage_complaints') }}" class="btn btn-sm btn-outline-primary">View All</a>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <tbody>
+                {% for c in recent %}
+                <tr>
+                  <td>{{ c.user.name }}</td>
+                  <td>{{ c.title|truncate(30) }}</td>
+                  <td>
+                    {% set status_class = 'bg-secondary' %}
+                    {% if c.status == 'Pending' %}
+                      {% set status_class = 'bg-warning text-dark' %}
+                    {% elif c.status == 'In Progress' %}
+                      {% set status_class = 'bg-info text-dark' %}
+                    {% elif c.status == 'Resolved' %}
+                      {% set status_class = 'bg-success' %}
+                    {% endif %}
+                    <span class="badge {{ status_class }}">{{ c.status }}</span>
+                  </td>
+                </tr>
+                {% else %}
+                <tr>
+                  <td colspan="3" class="text-center p-4">No recent complaints.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+  <div class="row">
+    <div class="col-12">
+        <a class="btn btn-outline-dark" href="{{ url_for('admin_manage_students') }}">
+            <i class="bi bi-people-fill"></i> Manage All Students ({{ students }})
+        </a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  fetch('/stats.json')
+    .then(r => r.json())
+    .then(data => { 
+      if (!data.error) { 
+        new Chart(document.getElementById('adminChart'), {
+          type: 'line',
+          data: {
+            labels: data.labels,
+            datasets: [{
+              label: 'Complaints',
+              data: data.counts,
+              fill: true,
+              borderColor: '#2575fc',
+              backgroundColor: 'rgba(37, 117, 252, 0.1)',
+              tension: 0.3
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        }); 
+      } 
+    })
+    .catch(e => console.log(e));
+</script>
+{% endblock %}

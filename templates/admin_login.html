@@ -1,0 +1,69 @@
+{% extends 'layout.html' %}
+
+{% block title %}Admin Login{% endblock %}
+
+{% block head %}
+  {{ super() }} <style>
+    .form-control {
+      /* Input field ke background ko white karta hai */
+      background-color: #FFFFFF !important; 
+      
+      /* Input field ke text ko dark (normal) karta hai taki woh dikhe */
+      color: #212529 !important; 
+    }
+  </style>
+{% endblock %}
+
+
+{% block body %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body p-5">
+          
+          <h2 class="card-title text-center mb-4">Admin Login</h2>
+
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          
+          <form method="POST" action="{{ url_for('admin_login') }}">
+            
+            <div class="mb-3">
+              <label for="email" class="form-label">Admin Email</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            
+            <div class="mb-3">
+              <label for="password" class="form-label">Admin Password</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-success btn-lg">Login as Admin</button>
+            </div>
+            
+          </form>
+          
+          <hr>
+          
+          <div class="text-center">
+            <a href="{{ url_for('login') }}">Not an admin? Go to Student Login</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

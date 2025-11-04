@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% block title %}Edit Student{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8"> <div class="card shadow-sm">
+        
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Edit Student Details</h6>
+        </div>
+        
+        <div class="card-body p-4">
+          <form method="POST">
+            
+            <div class="mb-3">
+              <label for="name" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="name" name="name" value="{{ user.name }}" required>
+            </div>
+            
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+            </div>
+            
+            <hr>
+            
+            <div class="d-flex gap-2">
+              <button class="btn btn-primary" type="submit">
+                <i class="bi bi-save"></i> Save Changes
+              </button>
+              <a class="btn btn-outline-secondary" href="{{ url_for('admin_manage_students') }}">
+                Cancel
+              </a>
+            </div>
+            
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

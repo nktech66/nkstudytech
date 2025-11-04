@@ -1,0 +1,88 @@
+{% extends 'layout.html' %}
+
+{% block title %}Student Login{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+    /* ----- YEH NAYA CODE HAI ----- */
+    
+    /* Input fields (like text, email, password) */
+    .form-control {
+      /* Aapke white background ki setting */
+      background-color: #FFFFFF !important; 
+      color: #212529 !important; 
+      
+      /* Naya Black Border */
+      border: 1px solid #000000 !important; 
+    }
+    
+    /* Blue glow ki jagah halka black glow (jab type karein) */
+    .form-control:focus {
+      box-shadow: 0 0 5px rgba(0,0,0,0.5) !important;
+    }
+    
+    /* Sabhi buttons par Black Border */
+    .btn {
+       border: 1px solid #000000 !important; 
+    }
+    /* ----- NAYA CODE KHATAM ----- */
+  </style>
+{% endblock %}
+
+
+{% block body %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm" style="border: none;">
+        <div class="card-body p-5">
+          
+          <h2 class="card-title text-center mb-4">Student Login</h2>
+
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                {% if category == 'danger' %}
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          
+          <form method="POST" action="{{ url_for('login') }}">
+            
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary btn-lg">Login</button>
+            </div>
+            
+          </form>
+          
+          <hr>
+          
+          <div class="text-center">
+            <p class="mb-0">Don't have an account?</p>
+            <a href="{{ url_for('register') }}">Register Now</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

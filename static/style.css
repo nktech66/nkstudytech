@@ -1,0 +1,344 @@
+/* ====== TOP CLASS ADVANCED CSS (style.css) ====== */
+
+:root {
+  --bg: #071021;
+  --card: rgba(255, 255, 255, 0.03);
+  --accent: #6ee7f9;
+  --accent-dark: #7c3aed;
+  --muted: rgba(255, 255, 255, 0.6);
+  --danger: #f96e6e;
+  --success: #6ef9a8;
+  --border-color: rgba(255, 255, 255, 0.04);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: Inter, system-ui, Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* NAYA: ANIMATED GRADIENT BACKGROUND */
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #041025, #081726, #041025);
+  background-size: 400% 400%; /* Animation ke liye size badhaya */
+  color: #e6f7ff;
+  min-height: 100vh;
+  overflow-x: hidden; /* Horizontal scroll rokne ke liye */
+  
+  /* Animation ko link kiya */
+  animation: gradientFlow 20s ease infinite;
+}
+
+/* --- Layout --- */
+.topbar {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  
+  /* NAYA: PAGE LOAD ANIMATION (Slide Down) */
+  animation: slideDown 0.8s ease-out forwards;
+}
+
+.container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  
+  /* NAYA: PAGE LOAD ANIMATION (Fade In Up) */
+  /* 'backwards' animation ko start hone se pehle visible rakhta hai */
+  animation: fadeInUp 1s ease-out 0.3s backwards; 
+}
+
+/* --- Typography --- */
+h1, h2, h3, h4 {
+  margin: 0 0 15px 0;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+h1 { font-size: 2.2em; text-shadow: 0 0 15px var(--accent-dark); }
+h2 { font-size: 1.8em; }
+p {
+  line-height: 1.6;
+  color: var(--muted);
+}
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* --- Components --- */
+
+/* NAYA: INTERACTIVE CARD GLOW */
+.card {
+  background: var(--card);
+  padding: 24px;
+  border-radius: 12px; /* Thoda zyada rounded */
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+  margin-bottom: 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  
+  position: relative; /* Glow effect ke liye zaroori */
+  overflow: hidden; /* Glow effect ko corners mein cut karne ke liye */
+  transition: all 0.3s ease;
+}
+
+/* Yeh card ke border ka glow banata hai */
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at 50% 50%, 
+    var(--accent), 
+    transparent 60%
+  );
+  opacity: 0;
+  transform: scale(1.5);
+  transition: opacity 0.4s ease-out;
+  z-index: -1;
+}
+
+.card:hover {
+  border-color: rgba(110, 231, 249, 0.3);
+  transform: translateY(-3px); /* Card ko thoda upar uthana */
+}
+
+.card:hover::before {
+  opacity: 0.15; /* Glow ko dikhana */
+}
+
+
+/* NAYA: DYNAMIC BUTTON ANIMATION */
+.btn {
+  background: linear-gradient(90deg, var(--accent), var(--accent-dark), var(--accent));
+  background-size: 200% auto; /* Gradient animation ke liye */
+  color: #001;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-block;
+  transition: all 0.4s ease-out; /* Transition ko smooth kiya */
+}
+
+.btn:hover {
+  transform: translateY(-3px); /* Thoda zyada upar */
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5);
+  background-position: right center; /* Gradient ko move karna */
+}
+
+.btn.ghost {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--accent);
+  background-size: auto; /* Ghost button ke liye reset */
+}
+.btn.ghost:hover {
+  background: var(--card);
+  color: #fff;
+  transform: none;
+  box-shadow: none;
+  background-position: initial;
+}
+
+.btn.small {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+.btn.danger {
+  background: linear-gradient(90deg, #f96e6e, #c0392b, #f96e6e);
+  background-size: 200% auto;
+}
+.btn.danger:hover {
+  box-shadow: 0 8px 25px rgba(249, 110, 110, 0.5);
+  background-position: right center;
+}
+
+
+/* ADVANCED: Form Styling */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+input, textarea, select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: rgba(0,0,0,0.1);
+  color: inherit;
+  font-size: 1em;
+  transition: all 0.3s ease;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(110, 231, 249, 0.3);
+}
+
+/* NAYA: ADVANCED FLOATING LABEL FORMS */
+/* Iske liye HTML structure change karna hoga */
+.form-group {
+  position: relative;
+  margin-top: 20px;
+}
+.form-group input, .form-group textarea {
+  width: 100%;
+  padding: 10px;
+  /* Label ke liye padding-top zyada chahiye */
+  padding-top: 18px; 
+}
+.form-group label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: var(--muted);
+  font-size: 1em;
+  pointer-events: none; /* Label par click pass-through */
+  transition: all 0.2s ease-out;
+}
+
+/* Yeh animation label ko upar bhejta hai */
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label,
+.form-group textarea:focus + label,
+.form-group textarea:not(:placeholder-shown) + label {
+  top: 4px;
+  left: 10px;
+  font-size: 0.75em;
+  color: var(--accent);
+}
+/* Input mein 'placeholder=" "' (ek space) daalna zaroori hai */
+
+
+/* --- Flash Messages --- */
+.flash {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  border: 1px solid transparent;
+}
+.flash.success {
+  background: rgba(110, 231, 249, 0.06);
+  border-color: rgba(110, 231, 249, 0.2);
+  color: var(--success);
+}
+.flash.error {
+  background: rgba(249, 110, 110, 0.06);
+  border-color: rgba(249, 110, 110, 0.2);
+  color: var(--danger);
+}
+
+
+/* --- Table Styling --- */
+table.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+table.table th, table.table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+}
+table.table th {
+  color: var(--muted);
+  font-size: 0.9em;
+  text-transform: uppercase;
+}
+table.table tbody tr {
+  transition: background-color 0.2s ease;
+}
+table.table tbody tr:hover {
+  background-color: var(--card);
+}
+
+/* --- Utilities --- */
+.hero {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .hero {
+    flex-direction: column;
+  }
+  .container {
+    padding: 15px;
+  }
+}
+
+/* NAYA: SCROLL ANIMATION (JS ke saath use karein) 
+  - Element ko default mein chhupa dein 
+*/
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-out;
+}
+/* - Jab JS se yeh class add ho, tab element ko dikhayein 
+*/
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* ====== NAYE KEYFRAMES (Animations) ====== */
+
+/* Background gradient ko flow karne ke liye */
+@keyframes gradientFlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Topbar ko slide karne ke liye */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Content ko fade-in karne ke liye */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block title %}Submit New Complaint{% endblock %}
+
+{% block body %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8"> 
+      <div class="card shadow-sm">
+        <div class="card-body p-5">
+
+          <div class="mb-3">
+            <a href="{{ url_for('student_dashboard') }}" class="text-decoration-none">&larr; Back to Dashboard</a>
+          </div>
+          
+          <h2 class="card-title text-center mb-4">Submit a New Complaint</h2>
+
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          
+          <form method="POST" action="{{ url_for('new_complaint') }}" enctype="multipart/form-data">
+            
+            <div class="mb-3">
+              <label for="title" class="form-label">Complaint Title</label>
+              <input type="text" class="form-control" id="title" name="title" required>
+              <div class="form-text">Full Description.</div>
+            </div>
+            
+            <div class="mb-3">
+              
+            <textarea class="form-control" id="description" name="description" rows="6" required style="height: 150px"></textarea>
+            
+            
+            
+            <div class="mb-3">
+              <label for="attachment" class="form-label">Attach File (Optional)</label>
+              <input class="form-control" type="file" id="attachment" name="attachment">
+           
+            
+            <hr>
+            
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary btn-lg">Submit Complaint</button>
+            </div>
+            
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block body %}
+
+<div class="container mt-4">
+
+  <!-- Welcome Message aur New Complaint Button -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Welcome, {{ current_user.name }}!</h2>
+    <a href="{{ url_for('new_complaint') }}" class="btn btn-primary shadow-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+      </svg>
+      Submit New Complaint
+    </a>
+  </div>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <h4 class="mb-3">Your Complaint History</h4>
+
+  <!-- Complaints ki List -->
+  {% if complaints %}
+    {% for c in complaints %}
+      <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            
+            <!-- Complaint ka Title -->
+            <h5 class="card-title">{{ c.title }}</h5>
+            
+            <!-- Status ke liye Color-coded Badge -->
+            {% set status_class = 'bg-secondary' %} <!-- Default color -->
+            {% if c.status == 'Pending' %}
+              {% set status_class = 'bg-warning text-dark' %}
+            {% elif c.status == 'In Progress' %}
+              {% set status_class = 'bg-info text-dark' %}
+            {% elif c.status == 'Resolved' %}
+              {% set status_class = 'bg-success' %}
+            {% endif %}
+            <span class="badge {{ status_class }} p-2">{{ c.status }}</span>
+
+          </div>
+          
+          <!-- Complaint ka Description -->
+          <p class="card-text text-muted">{{ c.description|truncate(150) }}</p>
+          
+          <hr>
+          
+          <!-- File Attachment aur Date -->
+          <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted">
+              Submitted on: {{ c.created_at.strftime('%d-%b-%Y') }}
+            </small>
+            {% if c.attachment %}
+              <a href="{{ url_for('uploaded_file', filename=c.attachment) }}" class="btn btn-sm btn-outline-secondary" target="_blank">View Attachment</a>
+            {% endif %}
+          </div>
+          
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <!-- Jab koi complaint na ho -->
+    <div class="card text-center p-5">
+      <div class="card-body">
+        <h5 class="card-title">No Complaints Found</h5>
+        <p class="card-text">You haven't submitted any complaints yet. Click the button below to get started.</p>
+        <a href="{{ url_for('new_complaint') }}" class="btn btn-primary">Submit Your First Complaint</a>
+      </div>
+    </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}
